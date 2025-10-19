@@ -54,7 +54,7 @@ class Editor(tk.Frame):
     def editor(self, parent):
         self.writer = tk.Text(parent)
         self.writer.grid(row=0, column=0, rowspan=7, columnspan=5, sticky="nsew")
-        self.writer.insert("1.0", "Open or create a new file to get started...\nDon't forget R: png(filename=\"\") or Python: savefig('filename.png') for plotting action\n\nVersion: 0.2 - Now with python!")
+        self.writer.insert("1.0", "Open or create a new file to get started...\nDon't forget R: png(filename=\"\") or Python: savefig('filename.png') for plotting action\n\nVersion: 0.3 - Now with python and working filepaths!")
         
         self.writer_scrollbar = ttk.Scrollbar(parent, orient=tk.VERTICAL, command=self.writer.yview)
         self.writer_scrollbar.grid(row=0, column=5, rowspan=7, sticky="ns")
@@ -88,9 +88,9 @@ class Editor(tk.Frame):
 
     def command(self, path):
         if self.mode == 'r':
-            pipe = subprocess.Popen(['Rscript', path], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            pipe = subprocess.Popen(['Rscript', path], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=self.basepath)
         else:
-            pipe = subprocess.Popen(['python', path], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            pipe = subprocess.Popen(['python', path], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=self.basepath)
         output, err = pipe.communicate(b"input data that is passed to subprocess' stdin")
 
         return output+err
